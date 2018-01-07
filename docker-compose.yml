@@ -1,0 +1,16 @@
+version: '2'
+services:
+  db:
+    build: ssh_server
+    volumes:
+      - ~/.ssh:/ssh
+    command: "ssh -Ng -L 53306:0.0.0.0:3306 -i /ssh/key -o StrictHostKeyChecking=no youruser@targethost"
+    ports:
+      - "53306"
+
+  test_server:
+    build: test_server
+    links:
+      - db
+    environment:
+      - DB_HOST=db
